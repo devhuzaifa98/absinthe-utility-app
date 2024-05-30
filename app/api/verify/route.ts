@@ -16,5 +16,5 @@ export const GET = async (request: Request) => {
     return NextResponse.json({ error: 'Invalid authorization token' }, { status: 401 });
   }
 
-  return NextResponse.json(rows[0], { status: 200 });
+  return NextResponse.json({ project: rows[0]}, { status: 200 });
 }
