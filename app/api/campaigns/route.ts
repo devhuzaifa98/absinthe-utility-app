@@ -1,31 +1,54 @@
-import { Pool, PoolClient } from 'pg';
-import { NextResponse } from 'next/server';
+import { Pool, PoolClient } from "pg";
+import { NextRequest, NextResponse } from "next/server";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-export const POST = async (request: Request) => {
+interface RequestBody {
+  project_id: string;
+  campaign_id: string;
+}
+
+interface Campaign {
+  id: number;
+  app_id: string;
+  project_id: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export const POST = async (request: NextRequest): Promise<NextResponse> => {
   const client: PoolClient = await pool.connect();
-  const { project_id, campaign_id } = await request.json();
+  let response: NextResponse;
 
   try {
-    let queryText = `SELECT * FROM campaigns WHERE app_id = $1 AND project_id = $2;`;
-    let { rows } = await client.query(queryText, [campaign_id, project_id]);
+    const { project_id, campaign_id }: RequestBody = await request.json();
+    let queryText: string = `SELECT * FROM campaigns WHERE app_id = $1 AND project_id = $2;`;
+    let { rows }: { rows: Campaign[] } = await client.query<Campaign>(
+      queryText,
+      [campaign_id, project_id],
+    );
 
     if (rows.length === 0) {
       queryText = `INSERT INTO campaigns (app_id, project_id) VALUES ($1, $2) RETURNING *;`;
-      const result = await client.query(queryText, [campaign_id, project_id]);
+      const result = await client.query<Campaign>(queryText, [
+        campaign_id,
+        project_id,
+      ]);
       rows = result.rows;
     }
 
-    return NextResponse.json({
-      campaign: rows[0],
-    }, { status: 200 });
-  } catch (error) {
-    console.error('Error setting points:', error);
-    return NextResponse.json({ error: 'Failed to find or create campaign' }, { status: 500 });
+    response = NextResponse.json({ campaign: rows[0] }, { status: 200 });
+  } catch (error: any) {
+    console.error("Error setting points:", error);
+    response = NextResponse.json(
+      { error: "Failed to find or create campaign" },
+      { status: 500 },
+    );
   } finally {
     client.release();
   }
+
+  return response;
 };
