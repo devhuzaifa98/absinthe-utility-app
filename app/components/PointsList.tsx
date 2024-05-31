@@ -10,7 +10,7 @@ import {
 interface FormData {
   eventName: string;
   pointsData: {
-    points?: number;
+    points: number;
     address: string;
   };
 }
@@ -23,7 +23,7 @@ const PointsList = () => {
   });
   const [formData, setFormData] = useState<FormData>({
     eventName: "",
-    pointsData: { points: undefined, address: "" },
+    pointsData: { points: 0, address: "" },
   });
   const [error, setError] = useState<string>("");
 
@@ -60,7 +60,7 @@ const PointsList = () => {
       await pointsClient.distribute(formData.eventName, formData.pointsData);
       setFormData({
         eventName: "",
-        pointsData: { points: undefined, address: "" },
+        pointsData: { points: 0, address: "" },
       });
       setQuery({ eventName: "", address: "" });
       setError("");
