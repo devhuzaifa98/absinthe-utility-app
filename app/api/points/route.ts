@@ -72,8 +72,13 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 
   let response: NextResponse;
   try {
-    let queryText: string = `SELECT * FROM points WHERE address = $1 AND campaign_id = $2`;
-    const queryValues = [address, campaign_id];
+    let queryText: string = `SELECT * FROM points WHERE campaign_id = $1`;
+    const queryValues = [campaign_id];
+
+    if (address) {
+      queryText += ` AND address = $2`;
+      queryValues.push(address);
+    }
 
     if (eventName) {
       queryText += ` AND event_name = $3`;
