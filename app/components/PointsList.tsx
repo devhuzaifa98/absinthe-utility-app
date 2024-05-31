@@ -29,7 +29,7 @@ const PointsList = () => {
 
   const pointsClient = new PointsClient({
     apiKey: process.env.NEXT_PUBLIC_API_KEY as string,
-    campaignId: process.env.NEXT_PUBLIC_CAMPAIGN_ID,
+    campaignId: process.env.NEXT_PUBLIC_CAMPAIGN_ID as string,
   });
 
   const fetchPointsList = async () => {
