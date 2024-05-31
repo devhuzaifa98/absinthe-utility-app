@@ -28,8 +28,7 @@ const PointsList = () => {
   const [error, setError] = useState<string>("");
 
   const pointsClient = new PointsClient({
-    apiKey:
-      process.env.NEXT_PUBLIC_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_API_KEY as string,
     campaignId: process.env.NEXT_PUBLIC_CAMPAIGN_ID,
   });
 
