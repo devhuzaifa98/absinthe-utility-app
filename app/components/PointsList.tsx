@@ -29,8 +29,8 @@ const PointsList = () => {
 
   const pointsClient = new PointsClient({
     apiKey:
-      "91f9f23fdcf7c4f1296c7fa60fe27cc6576b02d968ef7d43e978ac44d7e58fa4" as string,
-    campaignId: "fbsajkn",
+      process.env.NEXT_PUBLIC_API_KEY,
+    campaignId: process.env.NEXT_PUBLIC_CAMPAIGN_ID,
   });
 
   const fetchPointsList = async () => {
